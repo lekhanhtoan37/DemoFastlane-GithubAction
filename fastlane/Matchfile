@@ -1,0 +1,7 @@
+git_url("https://toanlk-2nf-home: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@github.com/toanlk-2nf/kanucha-match.git")
+
+storage_mode("git")
+
+type("development") # The default type, can be: appstore, adhoc, enterprise or development
+
+

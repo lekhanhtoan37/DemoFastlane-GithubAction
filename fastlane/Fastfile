@@ -1,0 +1,158 @@
+def upload_deploygate
+  deploygate( 
+    api_token: "7784c6450591c21869d3a35794906a659e7eb81b",
+    user: "lekhanhtoan37",
+    ipa: "./builds/demo_fastlane.ipa",
+    message: "Build #{lane_context[SharedValues::BUILD_NUMBER]}"
+  )
+end
+
+def push_code_remote
+    last_commit = last_git_commit
+    last_commit_message = last_commit[:message]
+    last_commit_hash = last_commit[:commit_hash]
+
+    current_branch = git_branch()
+    release_notes = "#{last_commit_message}\nBranch: #{current_branch}\nHash: #{last_commit_hash}"
+
+    clean_build_artifacts
+
+    # Tag release and push to GitHub
+    commit_version_bump message: "Deploying version #{version_number}."
+    add_git_tag tag: version_number
+    push_to_git_remote
+end
+
+def setupCodeSigning(keychainPassword, certificatePassword, profilePath, certificatePath)
+  create_keychain(
+    name: "CI-test",
+    password: keychainPassword,
+    default_keychain: true,
+    unlock: true,
+    timeout: 3600,
+    lock_when_sleeps: false
+  )
+  install_provisioning_profile(path: profilePath)
+  import_certificate(
+    certificate_path: certificatePath,
+    certificate_password: certificatePassword,
+    keychain_name: "CI-test",
+    keychain_password: keychainPassword
+  )
+end
+
+default_platform(:ios)
+
+platform :ios do
+  desc "test"
+  lane :test do
+
+  end
+
+  desc "Build develop version"
+  lane :development do 
+  # Make sure we start off with a clean slate
+    # ensure_git_status_clean
+    # ensure_git_branch(
+    #   branch: 'develop'
+    # )
+    # setup_ci
+
+    # sync_code_signing(  
+    #   type: "development",
+    #   readonly: is_ci
+    # )
+
+    if is_ci 
+    create_keychain(
+      name: "CI-test",
+      password: ENV["MATCH_PASSWORD"],
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
+    )
+    end
+
+    match(
+      type: "development",
+      readonly: true, 
+      keychain_name:  is_ci? ? "CI-test" : nil,
+      keychain_password: is_ci? ? ENV["MATCH_PASSWORD"] : nil,
+      force: false,
+      force_for_new_devices: true,
+      verbose: true
+    )
+
+    sh("security list-keychains -d user")
+    sh("security default-keychain -d user")
+    sh("security find-identity -v -p codesigning CI-test")
+
+    # Increment build number to current date
+    build_number = Time.new.strftime("%Y.%m.%d.%H.%M")
+    increment_build_number build_number: build_number
+
+    # Set version number to the one at the top of the CHANGELOG
+    # readme = File.read("./README.md")
+    # latest_version = readme.split("\n## ").first
+    # first_line = latest_version.split("\n").first
+    # version_number = first_line.split(" ")[1]
+
+    # disable_automatic_code_signing(
+    #  path: "resort-cloud.xcodeproj",
+    #  team_id: ENV["sigh_com.gamajscvn.DemoFastlane_development_team-id"]
+    # )
+
+
+    update_project_provisioning(
+      xcodeproj: "DemoFastlane.xcodeproj",
+      target_filter: "DemoFastlane",
+      profile: ENV["sigh_com.gamajscvn.DemoFastlane_development_profile-path"],
+      build_configuration: "Release"
+     )
+
+     # Project team update
+    update_project_team(
+     path: "DemoFastlane.xcodeproj",
+     teamid: ENV["sigh_com.gamajscvn.DemoFastlane_development_team-id"]
+    )
+     
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "DemoFastlane.xcodeproj",
+      code_sign_identity: "iPhone Developer"
+    )
+
+     # # App identifier update
+     # update_app_identifier(
+     #  xcodeproj: "resort-cloud.xcodeproj",
+     #  plist_path: PLIST_PATH,
+     #  app_identifier: app_identifier
+     # )
+
+    build_app(
+      workspace: "DemoFastlane.xcworkspace",
+      configuration: "Release",
+      scheme: "DemoFastlane",
+      export_method: 'development',
+      output_name: 'demo_fastlane',
+      output_directory: './builds',
+      clean: true,
+      silent: true,
+      export_options: {  
+        signingStyle: "manual",
+        compileBitcode: false,
+        provisioningProfiles: {
+          "com.gamajscvn.DemoFastlane" => ENV["sigh_com.gamajscvn.DemoFastlane_development_profile-name"],
+        }
+      }
+    )
+
+    upload_deploygate
+  end
+
+  lane :upload_deploygate do 
+    upload_deploygate
+  end
+
+end
