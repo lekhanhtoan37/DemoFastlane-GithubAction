@@ -57,6 +57,6 @@ jobs:
           bundle install
           bundle exec pod install --clean-install
           bundle exec fastlane development
-        env: 
-          MATCH_PASSWORD: "1234"
+        # env: 
+        #   MATCH_PASSWORD: "1234"
           # MATCH_REPO_SSH: "git@github.com:toanlk-2nf/kanucha-match.git"
