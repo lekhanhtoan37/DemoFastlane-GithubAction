@@ -38,12 +38,12 @@ jobs:
       #   run: |
           # touch ~/.ssh/toanlk_igp_rsa.pub
           # echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDdp4WmJsyHX0kz5NeE9xQughX+221yV6oLFA/LlxidbQYBwe1TIIkTlRRcB13WGAoG2tDiNW9m9xJ6Vdi1U4WY00JixLB/LUv+kWYNtd+jgJzmauXmkk9hWZES2II7Tcw4vmCd9gWCpsoId0NrzN7jXdhh3OPdnt5SeYbNka+RsZMFzsG/7j4D6s8gXMJY33RvULVz7iLrxObZWunRiMiz56NAIc5WVAKsC/Nc6mTz+YRqJfgSkgtXRiHs+uvIH7EIFI3kJRFeIJQajaFpJf2vMf5dyYS27TxCIh9MUni88bjUY7lmcAVBddKe4irmQ5V13BeTxkW31rfDG3pfASlRddACZbFRZPO2BKIpAfO1OfnAVUltQEYzsQLdga0yhSkvkxv+2QrlvlCMElo76T61uKa+/tFIgkaPfF2omjbLKMorSRDJkOLay7Q5EKvZhOT4m8nOxbpzEf+20/b8+R8VP41SrfybUehwhbqRyUKi1uk4FzyJU8AkWz6btFbnCwagQW/PHZxh1dhwDI+Tqsw6SKCHGF8tIKn1fW1mYT3uWauzzncs35EmmFfz/6NmetRHZZtwNPr/vmnt/b2nEpzVjPcuC6Q970+wdWrs++YCiR6WjDbNZPxS4l7e3ZS6u9g4GbZFNIJp6NWz6xdPMZru3dvxLp0vJWvnMiUTKZGQKQ== vn.le.khanh.toan@ignitionpoint-inc.com" > ~/.ssh/toanlk_igp_rsa.pub
-          # ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      #     # ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-      - name: Resolve Code-Signing due to new WWDR
-        run: |
-          curl https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o AppleWWDRCAG3.cer
-          sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain AppleWWDRCAG3.cer
+      # - name: Resolve Code-Signing due to new WWDR
+      #   run: |
+      #     curl https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o AppleWWDRCAG3.cer
+      #     sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain AppleWWDRCAG3.cer
 
 
       # Runs a single command using the runners shell
