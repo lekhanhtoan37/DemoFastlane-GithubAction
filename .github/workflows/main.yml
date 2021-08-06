@@ -1,0 +1,62 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+    
+env:
+  LANG: en_US.UTF-8
+  
+jobs:
+  build:
+    runs-on: [macOS-latest]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          swift-version: '5.4'
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '12.4'
+
+      # - name: Install SSH Key
+      #   uses: shimataro/ssh-key-action@v2
+      #   with:
+      #     key: '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'
+      #     known_hosts: 'github.com'
+          
+      # - name: Adding Known Hosts
+      #   run: |
+          # touch ~/.ssh/toanlk_igp_rsa.pub
+          # echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDdp4WmJsyHX0kz5NeE9xQughX+221yV6oLFA/LlxidbQYBwe1TIIkTlRRcB13WGAoG2tDiNW9m9xJ6Vdi1U4WY00JixLB/LUv+kWYNtd+jgJzmauXmkk9hWZES2II7Tcw4vmCd9gWCpsoId0NrzN7jXdhh3OPdnt5SeYbNka+RsZMFzsG/7j4D6s8gXMJY33RvULVz7iLrxObZWunRiMiz56NAIc5WVAKsC/Nc6mTz+YRqJfgSkgtXRiHs+uvIH7EIFI3kJRFeIJQajaFpJf2vMf5dyYS27TxCIh9MUni88bjUY7lmcAVBddKe4irmQ5V13BeTxkW31rfDG3pfASlRddACZbFRZPO2BKIpAfO1OfnAVUltQEYzsQLdga0yhSkvkxv+2QrlvlCMElo76T61uKa+/tFIgkaPfF2omjbLKMorSRDJkOLay7Q5EKvZhOT4m8nOxbpzEf+20/b8+R8VP41SrfybUehwhbqRyUKi1uk4FzyJU8AkWz6btFbnCwagQW/PHZxh1dhwDI+Tqsw6SKCHGF8tIKn1fW1mYT3uWauzzncs35EmmFfz/6NmetRHZZtwNPr/vmnt/b2nEpzVjPcuC6Q970+wdWrs++YCiR6WjDbNZPxS4l7e3ZS6u9g4GbZFNIJp6NWz6xdPMZru3dvxLp0vJWvnMiUTKZGQKQ== vn.le.khanh.toan@ignitionpoint-inc.com" > ~/.ssh/toanlk_igp_rsa.pub
+      #     # ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      # - name: Resolve Code-Signing due to new WWDR
+      #   run: |
+      #     curl https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o AppleWWDRCAG3.cer
+      #     sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain AppleWWDRCAG3.cer
+
+
+      # Runs a single command using the runners shell
+      - name: Install fastlane + cocoapods
+        run: 
+          sudo gem install bundler 
+
+      # Runs a set of commands using the runners shell
+      - name: Build 
+        run: |
+          bundle install
+          bundle exec pod install --clean-install
+          bundle exec fastlane development
+        env: 
+          MATCH_PASSWORD: "1234"
+          # MATCH_REPO_SSH: "git@github.com:toanlk-2nf/kanucha-match.git"
